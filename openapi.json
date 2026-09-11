@@ -1,0 +1,2213 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Glemad Pay API",
+    "version": "1.0.0",
+    "description": "Server-to-server payment infrastructure. Monetary amounts are integer minor units. Test keys use an isolated simulator."
+  },
+  "servers": [
+    {
+      "url": "{baseUrl}",
+      "variables": {
+        "baseUrl": {
+          "default": "https://pay-api.glemad.com",
+          "description": "Your Glemad Pay API origin"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/v1/checkout": {
+      "post": {
+        "operationId": "payments_checkout",
+        "tags": [
+          "payments"
+        ],
+        "summary": "Create a hosted checkout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/setup": {
+      "post": {
+        "operationId": "payments_setup",
+        "tags": [
+          "payments"
+        ],
+        "summary": "Save a payment method with hosted checkout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/charge": {
+      "post": {
+        "operationId": "payments_charge",
+        "tags": [
+          "payments"
+        ],
+        "summary": "Charge a saved payment method",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChargeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Charge"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/refund": {
+      "post": {
+        "operationId": "payments_refund",
+        "tags": [
+          "payments"
+        ],
+        "summary": "Refund a paid order",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefundRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Refund"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/orders/{orderId}": {
+      "get": {
+        "operationId": "payments_retrieve",
+        "tags": [
+          "payments"
+        ],
+        "summary": "Retrieve an order",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/customers/{productCustomerId}/payment-method": {
+      "get": {
+        "operationId": "customers_paymentMethod",
+        "tags": [
+          "customers"
+        ],
+        "summary": "Get the saved payment method summary",
+        "parameters": [
+          {
+            "name": "productCustomerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentMethod"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/customers/{productCustomerId}/payment-method/remove": {
+      "post": {
+        "operationId": "customers_removePaymentMethod",
+        "tags": [
+          "customers"
+        ],
+        "summary": "Remove a saved payment method",
+        "parameters": [
+          {
+            "name": "productCustomerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentMethod"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/currency-for-country": {
+      "get": {
+        "operationId": "currencies_retrieve",
+        "tags": [
+          "currencies"
+        ],
+        "summary": "Resolve the checkout currency",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Currency"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/kyc/status": {
+      "get": {
+        "operationId": "kyc_status",
+        "tags": [
+          "kyc"
+        ],
+        "summary": "Read verification status",
+        "parameters": [
+          {
+            "name": "product_customer_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycStatus"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/kyc/sessions": {
+      "post": {
+        "operationId": "kyc_createSession",
+        "tags": [
+          "kyc"
+        ],
+        "summary": "Start document, liveness and face verification",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycSession"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payouts/options": {
+      "get": {
+        "operationId": "payouts_options",
+        "tags": [
+          "payouts"
+        ],
+        "summary": "List available routes for a verified customer",
+        "parameters": [
+          {
+            "name": "product_customer_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayoutOptions"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payouts/banks": {
+      "get": {
+        "operationId": "payouts_banks",
+        "tags": [
+          "payouts"
+        ],
+        "summary": "List destination banks",
+        "parameters": [
+          {
+            "name": "product_customer_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Bank"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payouts/recipients/resolve": {
+      "post": {
+        "operationId": "payouts_resolveRecipient",
+        "tags": [
+          "payouts"
+        ],
+        "summary": "Resolve and store a payout recipient",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipientRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipient"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payouts/quotes": {
+      "post": {
+        "operationId": "payouts_quote",
+        "tags": [
+          "payouts"
+        ],
+        "summary": "Quote amount, fee and total debit",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quote"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payouts": {
+      "post": {
+        "operationId": "payouts_create",
+        "tags": [
+          "payouts"
+        ],
+        "summary": "Confirm a quoted payout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayoutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payout"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payouts/{payoutId}": {
+      "get": {
+        "operationId": "payouts_retrieve",
+        "tags": [
+          "payouts"
+        ],
+        "summary": "Retrieve payout status",
+        "parameters": [
+          {
+            "name": "payoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payout"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api-keys": {
+      "get": {
+        "operationId": "keys_list",
+        "tags": [
+          "keys"
+        ],
+        "summary": "List key metadata",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyList"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "keys_create",
+        "tags": [
+          "keys"
+        ],
+        "summary": "Create a key and reveal it once",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssuedKey"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api-keys/{id}/rotate": {
+      "post": {
+        "operationId": "keys_rotate",
+        "tags": [
+          "keys"
+        ],
+        "summary": "Rotate a key with explicit overlap",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rotation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssuedKey"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api-keys/{id}/revoke": {
+      "post": {
+        "operationId": "keys_revoke",
+        "tags": [
+          "keys"
+        ],
+        "summary": "Revoke a key immediately",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKey"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook-signing-secret": {
+      "get": {
+        "operationId": "webhooks_secretMetadata",
+        "tags": [
+          "webhooks"
+        ],
+        "summary": "Read signing-secret metadata",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSecretMetadata"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "webhooks_createSecret",
+        "tags": [
+          "webhooks"
+        ],
+        "summary": "Create a signing secret and reveal it once",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSecret"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook-signing-secret/rotate": {
+      "post": {
+        "operationId": "webhooks_rotateSecret",
+        "tags": [
+          "webhooks"
+        ],
+        "summary": "Rotate the signing secret",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rotation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSecret"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhook-endpoint": {
+      "get": {
+        "operationId": "webhooks_endpoint",
+        "tags": [
+          "webhooks"
+        ],
+        "summary": "Read the registered callback URL",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Endpoint"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "webhooks_setEndpoint",
+        "tags": [
+          "webhooks"
+        ],
+        "summary": "Register the HTTPS callback URL",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Endpoint"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client-config": {
+      "get": {
+        "operationId": "client_config",
+        "tags": [
+          "client"
+        ],
+        "summary": "Read public client configuration",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/testing/orders/{orderId}/complete": {
+      "post": {
+        "operationId": "testing_completeOrder",
+        "tags": [
+          "testing"
+        ],
+        "summary": "Simulate orders outcome (test keys only)",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestOrders"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/testing/payouts/{payoutId}/complete": {
+      "post": {
+        "operationId": "testing_completePayout",
+        "tags": [
+          "testing"
+        ],
+        "summary": "Simulate payouts outcome (test keys only)",
+        "parameters": [
+          {
+            "name": "payoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestPayouts"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payout"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/testing/kyc/{customerId}/decision": {
+      "post": {
+        "operationId": "testing_decideKyc",
+        "tags": [
+          "testing"
+        ],
+        "summary": "Simulate kyc outcome (test keys only)",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestKyc"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycStatus"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "product_customer_id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product_customer_id",
+          "email"
+        ]
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "callback_url": {
+            "type": "string"
+          },
+          "success_url": {
+            "type": "string"
+          },
+          "cancel_url": {
+            "type": "string"
+          },
+          "breakdown": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "amountMinor": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "label",
+                "amountMinor"
+              ]
+            }
+          }
+        },
+        "required": [
+          "order_id",
+          "amount",
+          "currency",
+          "country",
+          "customer"
+        ]
+      },
+      "SetupRequest": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "callback_url": {
+            "type": "string"
+          },
+          "success_url": {
+            "type": "string"
+          },
+          "cancel_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "order_id",
+          "country",
+          "customer"
+        ]
+      },
+      "Checkout": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "fallback_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checkout_url": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "livemode": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order_id",
+          "checkout_url",
+          "status"
+        ]
+      },
+      "ChargeRequest": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "product_customer_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          }
+        },
+        "required": [
+          "order_id",
+          "product_customer_id",
+          "amount",
+          "currency"
+        ]
+      },
+      "Charge": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "provider_reference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order_id",
+          "status"
+        ]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount_minor": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checkout_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "paid_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "livemode": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order_id",
+          "status",
+          "amount_minor",
+          "currency"
+        ]
+      },
+      "RefundRequest": {
+        "type": "object",
+        "properties": {
+          "refund_id": {
+            "type": "string"
+          },
+          "order_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refund_id",
+          "order_id"
+        ]
+      },
+      "Refund": {
+        "type": "object",
+        "properties": {
+          "refund_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount_minor": {
+            "type": "integer"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "refund_id",
+          "status"
+        ]
+      },
+      "PaymentMethod": {
+        "type": "object",
+        "properties": {
+          "product_customer_id": {
+            "type": "string"
+          },
+          "has_payment_method": {
+            "type": "boolean"
+          },
+          "active_provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "has_payment_method"
+        ]
+      },
+      "Currency": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "zero_decimal": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "country",
+          "currency",
+          "zero_decimal"
+        ]
+      },
+      "KycStatus": {
+        "type": "object",
+        "properties": {
+          "kyc_status": {
+            "type": "string"
+          },
+          "country": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "restricted": {
+            "type": "boolean"
+          },
+          "payout_eligible": {
+            "type": "boolean"
+          },
+          "rail_eligible": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kyc_status",
+          "restricted",
+          "payout_eligible",
+          "rail_eligible"
+        ]
+      },
+      "KycSessionRequest": {
+        "type": "object",
+        "properties": {
+          "product_customer_id": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "expected_details": {
+            "type": "object",
+            "properties": {
+              "first_name": {
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "date_of_birth": {
+                "type": "string"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "nationality": {
+                "type": "string"
+              },
+              "id_country": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "identification_number": {
+                "type": "string"
+              }
+            },
+            "required": []
+          },
+          "contact_details": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "required": []
+          }
+        },
+        "required": [
+          "product_customer_id",
+          "country"
+        ]
+      },
+      "KycSession": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "PayoutOption": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "bank",
+              "mobile_money"
+            ]
+          }
+        },
+        "required": [
+          "country",
+          "currency",
+          "method"
+        ]
+      },
+      "PayoutOptions": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PayoutOption"
+            }
+          }
+        },
+        "required": [
+          "country",
+          "options"
+        ]
+      },
+      "Bank": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "RecipientRequest": {
+        "type": "object",
+        "properties": {
+          "product_customer_id": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "bank",
+              "mobile_money"
+            ]
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "bank_code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product_customer_id",
+          "country",
+          "currency",
+          "method",
+          "account_number",
+          "bank_code"
+        ]
+      },
+      "Recipient": {
+        "type": "object",
+        "properties": {
+          "recipient_id": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string"
+          },
+          "bank_name": {
+            "type": "string"
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "account_holder": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "recipient_id",
+          "expires_at",
+          "account_holder"
+        ]
+      },
+      "QuoteRequest": {
+        "type": "object",
+        "properties": {
+          "product_customer_id": {
+            "type": "string"
+          },
+          "recipient_id": {
+            "type": "string"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "available_minor": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "product_customer_id",
+          "recipient_id",
+          "amount_minor",
+          "available_minor"
+        ]
+      },
+      "Quote": {
+        "type": "object",
+        "properties": {
+          "quote_id": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "amount_minor": {
+            "type": "integer"
+          },
+          "fee_minor": {
+            "type": "integer"
+          },
+          "total_minor": {
+            "type": "integer"
+          },
+          "bank_name": {
+            "type": "string"
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "account_holder": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "quote_id",
+          "expires_at",
+          "currency",
+          "amount_minor",
+          "fee_minor",
+          "total_minor"
+        ]
+      },
+      "PayoutRequest": {
+        "type": "object",
+        "properties": {
+          "product_customer_id": {
+            "type": "string"
+          },
+          "payout_id": {
+            "type": "string"
+          },
+          "quote_id": {
+            "type": "string"
+          },
+          "account_ownership_confirmed": {
+            "const": true,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "product_customer_id",
+          "payout_id",
+          "quote_id",
+          "account_ownership_confirmed"
+        ]
+      },
+      "Payout": {
+        "type": "object",
+        "properties": {
+          "payout_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing",
+              "completed",
+              "failed",
+              "reversed"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "payout_id",
+          "status"
+        ]
+      },
+      "KeyRequest": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "test"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "secret",
+              "publishable"
+            ]
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "ApiKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key_type": {
+            "type": "string",
+            "enum": [
+              "secret",
+              "publishable"
+            ]
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "key_type",
+          "prefix",
+          "created_at"
+        ]
+      },
+      "IssuedKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "test"
+            ]
+          },
+          "key_type": {
+            "type": "string",
+            "enum": [
+              "secret",
+              "publishable"
+            ]
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "mode",
+          "key_type"
+        ]
+      },
+      "KeyList": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "test"
+            ]
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApiKey"
+            }
+          }
+        },
+        "required": [
+          "mode",
+          "keys"
+        ]
+      },
+      "Rotation": {
+        "type": "object",
+        "properties": {
+          "overlap_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "overlap_seconds"
+        ]
+      },
+      "WebhookSecret": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "previous_expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "secret",
+          "created_at"
+        ]
+      },
+      "WebhookSecretMetadata": {
+        "type": "object",
+        "properties": {
+          "created_at": {
+            "type": "string"
+          },
+          "previous_expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "created_at"
+        ]
+      },
+      "Endpoint": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "callback_url"
+        ]
+      },
+      "ClientConfig": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "test"
+            ]
+          },
+          "api_version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product",
+          "mode",
+          "api_version"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Empty": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "TestOrders": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "paid",
+              "failed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "TestPayouts": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "reversed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "TestKyc": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "declined",
+              "pending",
+              "expired"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      }
+    }
+  }
+}

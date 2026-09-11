@@ -1,0 +1,1364 @@
+{
+  "schemas": {
+    "Customer": {
+      "type": "object",
+      "properties": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "product_customer_id",
+        "email"
+      ]
+    },
+    "CheckoutRequest": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "customer": {
+          "$ref": "#/components/schemas/Customer"
+        },
+        "callback_url": {
+          "type": "string"
+        },
+        "success_url": {
+          "type": "string"
+        },
+        "cancel_url": {
+          "type": "string"
+        },
+        "breakdown": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "amountMinor": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "label",
+              "amountMinor"
+            ]
+          }
+        }
+      },
+      "required": [
+        "order_id",
+        "amount",
+        "currency",
+        "country",
+        "customer"
+      ]
+    },
+    "SetupRequest": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "customer": {
+          "$ref": "#/components/schemas/Customer"
+        },
+        "callback_url": {
+          "type": "string"
+        },
+        "success_url": {
+          "type": "string"
+        },
+        "cancel_url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "order_id",
+        "country",
+        "customer"
+      ]
+    },
+    "Checkout": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "fallback_provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "checkout_url": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "replayed": {
+          "type": "boolean"
+        },
+        "livemode": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "order_id",
+        "checkout_url",
+        "status"
+      ]
+    },
+    "ChargeRequest": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string"
+        },
+        "product_customer_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        }
+      },
+      "required": [
+        "order_id",
+        "product_customer_id",
+        "amount",
+        "currency"
+      ]
+    },
+    "Charge": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "provider_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "replayed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "order_id",
+        "status"
+      ]
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "amount_minor": {
+          "type": "integer"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "checkout_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "paid_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "livemode": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "order_id",
+        "status",
+        "amount_minor",
+        "currency"
+      ]
+    },
+    "RefundRequest": {
+      "type": "object",
+      "properties": {
+        "refund_id": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "refund_id",
+        "order_id"
+      ]
+    },
+    "Refund": {
+      "type": "object",
+      "properties": {
+        "refund_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "amount_minor": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "replayed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "refund_id",
+        "status"
+      ]
+    },
+    "PaymentMethod": {
+      "type": "object",
+      "properties": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "has_payment_method": {
+          "type": "boolean"
+        },
+        "active_provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "has_payment_method"
+      ]
+    },
+    "Currency": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "zero_decimal": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "country",
+        "currency",
+        "zero_decimal"
+      ]
+    },
+    "KycStatus": {
+      "type": "object",
+      "properties": {
+        "kyc_status": {
+          "type": "string"
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "restricted": {
+          "type": "boolean"
+        },
+        "payout_eligible": {
+          "type": "boolean"
+        },
+        "rail_eligible": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kyc_status",
+        "restricted",
+        "payout_eligible",
+        "rail_eligible"
+      ]
+    },
+    "KycSessionRequest": {
+      "type": "object",
+      "properties": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "expected_details": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            },
+            "date_of_birth": {
+              "type": "string"
+            },
+            "gender": {
+              "type": "string"
+            },
+            "nationality": {
+              "type": "string"
+            },
+            "id_country": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "identification_number": {
+              "type": "string"
+            }
+          },
+          "required": []
+        },
+        "contact_details": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            }
+          },
+          "required": []
+        }
+      },
+      "required": [
+        "product_customer_id",
+        "country"
+      ]
+    },
+    "KycSession": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "session_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "PayoutOption": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "bank",
+            "mobile_money"
+          ]
+        }
+      },
+      "required": [
+        "country",
+        "currency",
+        "method"
+      ]
+    },
+    "PayoutOptions": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/PayoutOption"
+          }
+        }
+      },
+      "required": [
+        "country",
+        "options"
+      ]
+    },
+    "Bank": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "name"
+      ]
+    },
+    "RecipientRequest": {
+      "type": "object",
+      "properties": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "bank",
+            "mobile_money"
+          ]
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "bank_code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "product_customer_id",
+        "country",
+        "currency",
+        "method",
+        "account_number",
+        "bank_code"
+      ]
+    },
+    "Recipient": {
+      "type": "object",
+      "properties": {
+        "recipient_id": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "bank_name": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "account_holder": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "recipient_id",
+        "expires_at",
+        "account_holder"
+      ]
+    },
+    "QuoteRequest": {
+      "type": "object",
+      "properties": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "recipient_id": {
+          "type": "string"
+        },
+        "amount_minor": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "available_minor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "product_customer_id",
+        "recipient_id",
+        "amount_minor",
+        "available_minor"
+      ]
+    },
+    "Quote": {
+      "type": "object",
+      "properties": {
+        "quote_id": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "amount_minor": {
+          "type": "integer"
+        },
+        "fee_minor": {
+          "type": "integer"
+        },
+        "total_minor": {
+          "type": "integer"
+        },
+        "bank_name": {
+          "type": "string"
+        },
+        "account_number": {
+          "type": "string"
+        },
+        "account_holder": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "quote_id",
+        "expires_at",
+        "currency",
+        "amount_minor",
+        "fee_minor",
+        "total_minor"
+      ]
+    },
+    "PayoutRequest": {
+      "type": "object",
+      "properties": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "payout_id": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "account_ownership_confirmed": {
+          "const": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "product_customer_id",
+        "payout_id",
+        "quote_id",
+        "account_ownership_confirmed"
+      ]
+    },
+    "Payout": {
+      "type": "object",
+      "properties": {
+        "payout_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "processing",
+            "completed",
+            "failed",
+            "reversed"
+          ]
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "payout_id",
+        "status"
+      ]
+    },
+    "KeyRequest": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "live",
+            "test"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "secret",
+            "publishable"
+          ]
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "ApiKey": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key_type": {
+          "type": "string",
+          "enum": [
+            "secret",
+            "publishable"
+          ]
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revoked_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "key_type",
+        "prefix",
+        "created_at"
+      ]
+    },
+    "IssuedKey": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "live",
+            "test"
+          ]
+        },
+        "key_type": {
+          "type": "string",
+          "enum": [
+            "secret",
+            "publishable"
+          ]
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "mode",
+        "key_type"
+      ]
+    },
+    "KeyList": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "live",
+            "test"
+          ]
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/ApiKey"
+          }
+        }
+      },
+      "required": [
+        "mode",
+        "keys"
+      ]
+    },
+    "Rotation": {
+      "type": "object",
+      "properties": {
+        "overlap_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        }
+      },
+      "required": [
+        "overlap_seconds"
+      ]
+    },
+    "WebhookSecret": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "previous_expires_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "secret",
+        "created_at"
+      ]
+    },
+    "WebhookSecretMetadata": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "previous_expires_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "created_at"
+      ]
+    },
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "callback_url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "callback_url"
+      ]
+    },
+    "ClientConfig": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "live",
+            "test"
+          ]
+        },
+        "api_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "product",
+        "mode",
+        "api_version"
+      ]
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "error"
+      ]
+    },
+    "Empty": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    },
+    "TestOrders": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "paid",
+            "failed"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "TestPayouts": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "failed",
+            "reversed"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "TestKyc": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "declined",
+            "pending",
+            "expired"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+  },
+  "operations": [
+    {
+      "method": "post",
+      "path": "/checkout",
+      "group": "payments",
+      "name": "checkout",
+      "operationId": "payments_checkout",
+      "summary": "Create a hosted checkout",
+      "request": "CheckoutRequest",
+      "response": "Checkout",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/setup",
+      "group": "payments",
+      "name": "setup",
+      "operationId": "payments_setup",
+      "summary": "Save a payment method with hosted checkout",
+      "request": "SetupRequest",
+      "response": "Checkout",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/charge",
+      "group": "payments",
+      "name": "charge",
+      "operationId": "payments_charge",
+      "summary": "Charge a saved payment method",
+      "request": "ChargeRequest",
+      "response": "Charge",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/refund",
+      "group": "payments",
+      "name": "refund",
+      "operationId": "payments_refund",
+      "summary": "Refund a paid order",
+      "request": "RefundRequest",
+      "response": "Refund",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/orders/:orderId",
+      "group": "payments",
+      "name": "retrieve",
+      "operationId": "payments_retrieve",
+      "summary": "Retrieve an order",
+      "request": null,
+      "response": "Order",
+      "query": {},
+      "params": [
+        "orderId"
+      ]
+    },
+    {
+      "method": "get",
+      "path": "/customers/:productCustomerId/payment-method",
+      "group": "customers",
+      "name": "paymentMethod",
+      "operationId": "customers_paymentMethod",
+      "summary": "Get the saved payment method summary",
+      "request": null,
+      "response": "PaymentMethod",
+      "query": {},
+      "params": [
+        "productCustomerId"
+      ]
+    },
+    {
+      "method": "post",
+      "path": "/customers/:productCustomerId/payment-method/remove",
+      "group": "customers",
+      "name": "removePaymentMethod",
+      "operationId": "customers_removePaymentMethod",
+      "summary": "Remove a saved payment method",
+      "request": null,
+      "response": "PaymentMethod",
+      "query": {},
+      "params": [
+        "productCustomerId"
+      ]
+    },
+    {
+      "method": "get",
+      "path": "/currency-for-country",
+      "group": "currencies",
+      "name": "retrieve",
+      "operationId": "currencies_retrieve",
+      "summary": "Resolve the checkout currency",
+      "request": null,
+      "response": "Currency",
+      "query": {
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        }
+      },
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/kyc/status",
+      "group": "kyc",
+      "name": "status",
+      "operationId": "kyc_status",
+      "summary": "Read verification status",
+      "request": null,
+      "response": "KycStatus",
+      "query": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "optional": true
+        }
+      },
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/kyc/sessions",
+      "group": "kyc",
+      "name": "createSession",
+      "operationId": "kyc_createSession",
+      "summary": "Start document, liveness and face verification",
+      "request": "KycSessionRequest",
+      "response": "KycSession",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/payouts/options",
+      "group": "payouts",
+      "name": "options",
+      "operationId": "payouts_options",
+      "summary": "List available routes for a verified customer",
+      "request": null,
+      "response": "PayoutOptions",
+      "query": {
+        "product_customer_id": {
+          "type": "string"
+        }
+      },
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/payouts/banks",
+      "group": "payouts",
+      "name": "banks",
+      "operationId": "payouts_banks",
+      "summary": "List destination banks",
+      "request": null,
+      "response": "Bank[]",
+      "query": {
+        "product_customer_id": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      },
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/payouts/recipients/resolve",
+      "group": "payouts",
+      "name": "resolveRecipient",
+      "operationId": "payouts_resolveRecipient",
+      "summary": "Resolve and store a payout recipient",
+      "request": "RecipientRequest",
+      "response": "Recipient",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/payouts/quotes",
+      "group": "payouts",
+      "name": "quote",
+      "operationId": "payouts_quote",
+      "summary": "Quote amount, fee and total debit",
+      "request": "QuoteRequest",
+      "response": "Quote",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/payouts",
+      "group": "payouts",
+      "name": "create",
+      "operationId": "payouts_create",
+      "summary": "Confirm a quoted payout",
+      "request": "PayoutRequest",
+      "response": "Payout",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/payouts/:payoutId",
+      "group": "payouts",
+      "name": "retrieve",
+      "operationId": "payouts_retrieve",
+      "summary": "Retrieve payout status",
+      "request": null,
+      "response": "Payout",
+      "query": {},
+      "params": [
+        "payoutId"
+      ]
+    },
+    {
+      "method": "get",
+      "path": "/api-keys",
+      "group": "keys",
+      "name": "list",
+      "operationId": "keys_list",
+      "summary": "List key metadata",
+      "request": null,
+      "response": "KeyList",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/api-keys",
+      "group": "keys",
+      "name": "create",
+      "operationId": "keys_create",
+      "summary": "Create a key and reveal it once",
+      "request": "KeyRequest",
+      "response": "IssuedKey",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/api-keys/:id/rotate",
+      "group": "keys",
+      "name": "rotate",
+      "operationId": "keys_rotate",
+      "summary": "Rotate a key with explicit overlap",
+      "request": "Rotation",
+      "response": "IssuedKey",
+      "query": {},
+      "params": [
+        "id"
+      ]
+    },
+    {
+      "method": "post",
+      "path": "/api-keys/:id/revoke",
+      "group": "keys",
+      "name": "revoke",
+      "operationId": "keys_revoke",
+      "summary": "Revoke a key immediately",
+      "request": null,
+      "response": "ApiKey",
+      "query": {},
+      "params": [
+        "id"
+      ]
+    },
+    {
+      "method": "get",
+      "path": "/webhook-signing-secret",
+      "group": "webhooks",
+      "name": "secretMetadata",
+      "operationId": "webhooks_secretMetadata",
+      "summary": "Read signing-secret metadata",
+      "request": null,
+      "response": "WebhookSecretMetadata",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/webhook-signing-secret",
+      "group": "webhooks",
+      "name": "createSecret",
+      "operationId": "webhooks_createSecret",
+      "summary": "Create a signing secret and reveal it once",
+      "request": null,
+      "response": "WebhookSecret",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/webhook-signing-secret/rotate",
+      "group": "webhooks",
+      "name": "rotateSecret",
+      "operationId": "webhooks_rotateSecret",
+      "summary": "Rotate the signing secret",
+      "request": "Rotation",
+      "response": "WebhookSecret",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/webhook-endpoint",
+      "group": "webhooks",
+      "name": "endpoint",
+      "operationId": "webhooks_endpoint",
+      "summary": "Read the registered callback URL",
+      "request": null,
+      "response": "Endpoint",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/webhook-endpoint",
+      "group": "webhooks",
+      "name": "setEndpoint",
+      "operationId": "webhooks_setEndpoint",
+      "summary": "Register the HTTPS callback URL",
+      "request": "Endpoint",
+      "response": "Endpoint",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/client-config",
+      "group": "client",
+      "name": "config",
+      "operationId": "client_config",
+      "summary": "Read public client configuration",
+      "request": null,
+      "response": "ClientConfig",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "post",
+      "path": "/testing/orders/:orderId/complete",
+      "group": "testing",
+      "name": "completeOrder",
+      "operationId": "testing_completeOrder",
+      "summary": "Simulate orders outcome (test keys only)",
+      "request": "TestOrders",
+      "response": "Order",
+      "query": {},
+      "params": [
+        "orderId"
+      ]
+    },
+    {
+      "method": "post",
+      "path": "/testing/payouts/:payoutId/complete",
+      "group": "testing",
+      "name": "completePayout",
+      "operationId": "testing_completePayout",
+      "summary": "Simulate payouts outcome (test keys only)",
+      "request": "TestPayouts",
+      "response": "Payout",
+      "query": {},
+      "params": [
+        "payoutId"
+      ]
+    },
+    {
+      "method": "post",
+      "path": "/testing/kyc/:customerId/decision",
+      "group": "testing",
+      "name": "decideKyc",
+      "operationId": "testing_decideKyc",
+      "summary": "Simulate kyc outcome (test keys only)",
+      "request": "TestKyc",
+      "response": "KycStatus",
+      "query": {},
+      "params": [
+        "customerId"
+      ]
+    }
+  ]
+}
