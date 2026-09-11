@@ -36,6 +36,11 @@ export type Empty = {  };
 export type TestOrders = { "status": "paid" | "failed"; };
 export type TestPayouts = { "status": "completed" | "failed" | "reversed"; };
 export type TestKyc = { "status": "approved" | "declined" | "pending" | "expired"; };
+export type AccountRequest = { "glemad_id": string; };
+export type Balance = { "currency": string; "available_minor": number; };
+export type Account = { "account_id": string; "account_type": "personal" | "business"; "status": "active" | "restricted" | "closed"; "balances": Array<Balance>; "created_at": string; };
+export type TransferRequest = { "transfer_id": string; "destination": string; "amount": number; "currency": string; "reference": string; };
+export type Transfer = { "transfer_id": string; "destination": string; "amount": number; "currency": string; "reference": string; "status": "completed" | "reversed"; "created_at": string; "replayed"?: boolean; };
 export interface RequestOptions { signal?: AbortSignal; idempotencyKey?: string; }
 export interface WebhookEvent { event_id: string; timestamp: number; [key: string]: unknown; }
 export declare function verifyWebhook(raw: Buffer, headers: Record<string,string | string[] | undefined>, secret: string, now?: number): boolean;
@@ -59,6 +64,14 @@ retrieve(query: { "country": string; }, options?: RequestOptions): Promise<Curre
 kyc: {
 status(query: { "product_customer_id": string; "country"?: string; }, options?: RequestOptions): Promise<KycStatus>;
 createSession(body: KycSessionRequest, options?: RequestOptions): Promise<KycSession>;
+};
+accounts: {
+create(body: AccountRequest, options?: RequestOptions): Promise<Account>;
+retrieve(accountId: string, options?: RequestOptions): Promise<Account>;
+};
+transfers: {
+create(body: TransferRequest, options?: RequestOptions): Promise<Transfer>;
+retrieve(transferId: string, options?: RequestOptions): Promise<Transfer>;
 };
 payouts: {
 options(query: { "product_customer_id": string; }, options?: RequestOptions): Promise<PayoutOptions>;

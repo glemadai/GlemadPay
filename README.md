@@ -7,14 +7,14 @@ Use the Glemad Pay SDK from your server to create checkout sessions, save paymen
 Pin a release tag in production:
 
 ```bash
-npm install https://github.com/glemadai/GlemadPay/archive/refs/tags/v1.0.0.tar.gz
+npm install https://github.com/glemadai/GlemadPay/archive/refs/tags/v1.1.0.tar.gz
 ```
 
 For Rust:
 
 ```toml
 [dependencies]
-glemad-pay = { git = "https://github.com/glemadai/GlemadPay", tag = "v1.0.0" }
+glemad-pay = { git = "https://github.com/glemadai/GlemadPay", tag = "v1.1.0" }
 ```
 
 ## Create a client
@@ -50,6 +50,30 @@ const checkout = await pay.payments.checkout({
 ```
 
 Redirect the customer to `checkout.checkout_url`. Confirm payment from a verified webhook or by retrieving the order. Do not use the browser redirect as proof of payment.
+
+## Pay a connected account
+
+Create or connect the person's Glemad Pay account with the stable user ID from Glemad ID:
+
+```js
+const account = await pay.accounts.create({
+  glemad_id: "1d932902-ff2d-4a82-98a3-9d12c36b7a6a",
+});
+```
+
+Store `account.account_id` on your platform. When earnings become eligible, credit the connected account from your server:
+
+```js
+const transfer = await pay.transfers.create({
+  transfer_id: "nabtap_2026_w37_creator_42",
+  destination: account.account_id,
+  amount: 250000,
+  currency: "NGN",
+  reference: "Nabtap creator earnings for 7–13 September 2026",
+});
+```
+
+Use a permanent, unique `transfer_id` for each settlement. Retrying the same transfer is safe. Glemad Pay rejects it if the destination, amount, currency, or reference changes.
 
 ## Verify a webhook
 

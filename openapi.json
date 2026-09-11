@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Glemad Pay API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Server-to-server payment infrastructure. Monetary amounts are integer minor units. Test keys use an isolated simulator."
   },
   "servers": [
@@ -424,6 +424,172 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/KycSession"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/accounts": {
+      "post": {
+        "operationId": "accounts_create",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Create or connect the Glemad Pay account for a Glemad ID",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/accounts/{accountId}": {
+      "get": {
+        "operationId": "accounts_retrieve",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Retrieve a connected Glemad Pay account",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/transfers": {
+      "post": {
+        "operationId": "transfers_create",
+        "tags": [
+          "transfers"
+        ],
+        "summary": "Credit funds to a connected Glemad Pay account",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transfer"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error. Inspect error and HTTP status; do not retry money movement blindly.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/transfers/{transferId}": {
+      "get": {
+        "operationId": "transfers_retrieve",
+        "tags": [
+          "transfers"
+        ],
+        "summary": "Retrieve a platform transfer",
+        "parameters": [
+          {
+            "name": "transferId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transfer"
                 }
               }
             }
@@ -2200,6 +2366,145 @@
         },
         "required": [
           "status"
+        ]
+      },
+      "AccountRequest": {
+        "type": "object",
+        "properties": {
+          "glemad_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "glemad_id"
+        ]
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "available_minor": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "currency",
+          "available_minor"
+        ]
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string"
+          },
+          "account_type": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "business"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "restricted",
+              "closed"
+            ]
+          },
+          "balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Balance"
+            }
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "account_type",
+          "status",
+          "balances",
+          "created_at"
+        ]
+      },
+      "TransferRequest": {
+        "type": "object",
+        "properties": {
+          "transfer_id": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "reference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "transfer_id",
+          "destination",
+          "amount",
+          "currency",
+          "reference"
+        ]
+      },
+      "Transfer": {
+        "type": "object",
+        "properties": {
+          "transfer_id": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "reversed"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "transfer_id",
+          "destination",
+          "amount",
+          "currency",
+          "reference",
+          "status",
+          "created_at"
         ]
       }
     }

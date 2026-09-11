@@ -965,6 +965,145 @@
       "required": [
         "status"
       ]
+    },
+    "AccountRequest": {
+      "type": "object",
+      "properties": {
+        "glemad_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "glemad_id"
+      ]
+    },
+    "Balance": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "available_minor": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "currency",
+        "available_minor"
+      ]
+    },
+    "Account": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "string"
+        },
+        "account_type": {
+          "type": "string",
+          "enum": [
+            "personal",
+            "business"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "restricted",
+            "closed"
+          ]
+        },
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Balance"
+          }
+        },
+        "created_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "account_id",
+        "account_type",
+        "status",
+        "balances",
+        "created_at"
+      ]
+    },
+    "TransferRequest": {
+      "type": "object",
+      "properties": {
+        "transfer_id": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "reference": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "transfer_id",
+        "destination",
+        "amount",
+        "currency",
+        "reference"
+      ]
+    },
+    "Transfer": {
+      "type": "object",
+      "properties": {
+        "transfer_id": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "reversed"
+          ]
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "replayed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "transfer_id",
+        "destination",
+        "amount",
+        "currency",
+        "reference",
+        "status",
+        "created_at"
+      ]
     }
   },
   "operations": [
@@ -1107,6 +1246,58 @@
       "response": "KycSession",
       "query": {},
       "params": []
+    },
+    {
+      "method": "post",
+      "path": "/accounts",
+      "group": "accounts",
+      "name": "create",
+      "operationId": "accounts_create",
+      "summary": "Create or connect the Glemad Pay account for a Glemad ID",
+      "request": "AccountRequest",
+      "response": "Account",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/accounts/:accountId",
+      "group": "accounts",
+      "name": "retrieve",
+      "operationId": "accounts_retrieve",
+      "summary": "Retrieve a connected Glemad Pay account",
+      "request": null,
+      "response": "Account",
+      "query": {},
+      "params": [
+        "accountId"
+      ]
+    },
+    {
+      "method": "post",
+      "path": "/transfers",
+      "group": "transfers",
+      "name": "create",
+      "operationId": "transfers_create",
+      "summary": "Credit funds to a connected Glemad Pay account",
+      "request": "TransferRequest",
+      "response": "Transfer",
+      "query": {},
+      "params": []
+    },
+    {
+      "method": "get",
+      "path": "/transfers/:transferId",
+      "group": "transfers",
+      "name": "retrieve",
+      "operationId": "transfers_retrieve",
+      "summary": "Retrieve a platform transfer",
+      "request": null,
+      "response": "Transfer",
+      "query": {},
+      "params": [
+        "transferId"
+      ]
     },
     {
       "method": "get",
