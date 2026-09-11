@@ -51,30 +51,6 @@ const checkout = await pay.payments.checkout({
 
 Redirect the customer to `checkout.checkout_url`. Confirm payment from a verified webhook or by retrieving the order. Do not use the browser redirect as proof of payment.
 
-## Pay a connected account
-
-Create or connect the person's Glemad Pay account with the stable user ID from Glemad ID:
-
-```js
-const account = await pay.accounts.create({
-  glemad_id: "1d932902-ff2d-4a82-98a3-9d12c36b7a6a",
-});
-```
-
-Store `account.account_id` on your platform. When earnings become eligible, credit the connected account from your server:
-
-```js
-const transfer = await pay.transfers.create({
-  transfer_id: "nabtap_2026_w37_creator_42",
-  destination: account.account_id,
-  amount: 250000,
-  currency: "NGN",
-  reference: "Nabtap creator earnings for 7–13 September 2026",
-});
-```
-
-Use a permanent, unique `transfer_id` for each settlement. Retrying the same transfer is safe. Glemad Pay rejects it if the destination, amount, currency, or reference changes.
-
 ## Verify a webhook
 
 Configure Express to preserve the original request body for this route:
