@@ -7,7 +7,7 @@ Use the Glemad Pay SDK from your server to create checkout sessions, save paymen
 Pin a release tag in production:
 
 ```bash
-npm install github:glemadai/GlemadPay#v1.0.0
+npm install https://github.com/glemadai/GlemadPay/archive/refs/tags/v1.0.0.tar.gz
 ```
 
 For Rust:
