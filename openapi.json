@@ -7,13 +7,7 @@
   },
   "servers": [
     {
-      "url": "{baseUrl}",
-      "variables": {
-        "baseUrl": {
-          "default": "https://pay-api.glemad.com",
-          "description": "Your Glemad Pay API origin"
-        }
-      }
+      "url": "https://pay-api.glemad.com"
     }
   ],
   "security": [
