@@ -44,7 +44,7 @@ class GlemadPay {
         const response = await transport(endpoint.href, {
           method: op.method.toUpperCase(), redirect: 'error',
           headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json',
-            'Glemad-SDK': 'node/1.1.0', ...(options.idempotencyKey ? {'Idempotency-Key': options.idempotencyKey} : {}) },
+            'Glemad-SDK': 'node/1.1.1', ...(options.idempotencyKey ? {'Idempotency-Key': options.idempotencyKey} : {}) },
           body, signal: options.signal || AbortSignal.timeout(timeoutMs),
         });
         const raw = await response.text();

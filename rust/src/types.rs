@@ -312,43 +312,6 @@ pub struct TestKyc {
     pub status: String,
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct AccountRequest {
-    pub glemad_id: String,
-}
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct Balance {
-    pub currency: String,
-    pub available_minor: i64,
-}
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct Account {
-    pub account_id: String,
-    pub account_type: String,
-    pub status: String,
-    pub balances: Vec<Balance>,
-    pub created_at: String,
-}
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct TransferRequest {
-    pub transfer_id: String,
-    pub destination: String,
-    pub amount: i64,
-    pub currency: String,
-    pub reference: String,
-}
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct Transfer {
-    pub transfer_id: String,
-    pub destination: String,
-    pub amount: i64,
-    pub currency: String,
-    pub reference: String,
-    pub status: String,
-    pub created_at: String,
-    #[serde(default, skip_serializing_if="Option::is_none")]
-    pub replayed: Option<bool>,
-}
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CheckoutRequestBreakdownItem {
     pub label: String,
     #[serde(rename="amountMinor")]

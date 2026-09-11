@@ -1,6 +1,6 @@
 {
   "name": "@glemad/pay",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Official server SDK for Glemad Pay",
   "main": "index.js",
   "types": "index.d.ts",
@@ -12,12 +12,29 @@
       "default": "./index.js"
     }
   },
-  "files": ["index.js", "index.d.ts", "contract.json", "webhookSignature.js", "README.md"],
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "contract.json",
+    "webhookSignature.js",
+    "README.md"
+  ],
   "scripts": {
     "test": "node --test test/*.test.js",
     "pack:check": "npm pack --dry-run"
   },
-  "engines": {"node": ">=18"},
-  "repository": {"type": "git", "url": "https://github.com/glemadai/GlemadPay.git"},
-  "keywords": ["glemad", "payments", "payouts", "kyc", "webhooks"]
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glemadai/GlemadPay.git"
+  },
+  "keywords": [
+    "glemad",
+    "payments",
+    "payouts",
+    "kyc",
+    "webhooks"
+  ]
 }
