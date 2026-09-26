@@ -48,7 +48,7 @@ impl GlemadPayClient {
     ) -> anyhow::Result<T> {
         let response = request
             .bearer_auth(&self.api_key)
-            .header("Glemad-SDK", "rust/1.0.0")
+            .header("Glemad-SDK", "rust/1.2.2")
             .send()
             .await?;
         let status = response.status();
