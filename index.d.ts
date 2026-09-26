@@ -1,6 +1,6 @@
 /// <reference types="node" />
 export type Customer = { "product_customer_id": string; "email": string; "name"?: string; };
-export type CheckoutRequest = { "order_id": string; "amount": number; "currency": string; "country": string; "customer": Customer; "callback_url"?: string; "success_url"?: string; "cancel_url"?: string; "breakdown"?: Array<{ "label": string; "amountMinor": number; }>; };
+export type CheckoutRequest = { "order_id": string; "amount": number; "currency": string; "country"?: string; "mode": "payment" | "subscription"; "recurring"?: { "interval": "day" | "week" | "month" | "year"; "interval_count": number; }; "customer": Customer; "callback_url"?: string; "success_url"?: string; "cancel_url"?: string; "breakdown"?: Array<{ "label": string; "amountMinor": number; }>; };
 export type SetupRequest = { "order_id": string; "country": string; "customer": Customer; "callback_url"?: string; "success_url"?: string; "cancel_url"?: string; };
 export type Checkout = { "order_id": string; "provider"?: string; "fallback_provider"?: string | null; "checkout_url": string; "currency"?: string; "status": string; "replayed"?: boolean; "livemode"?: boolean; };
 export type ChargeRequest = { "order_id": string; "product_customer_id": string; "amount": number; "currency": string; "country"?: string; };

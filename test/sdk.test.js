@@ -30,6 +30,25 @@ test('encodes paths and returns typed API errors', async () => {
   );
 });
 
+test('forwards explicit one-time and recurring checkout contracts unchanged', async () => {
+  const calls = [];
+  const pay = new GlemadPay({
+    apiKey: 'test-placeholder',
+    baseUrl: 'https://pay.example',
+    fetch: async (url, options) => {
+      calls.push({ url, options });
+      return new Response(JSON.stringify({ order_id: 'order_1', status: 'pending', checkout_url: 'https://pay.example/checkout/1' }), { status: 200 });
+    },
+  });
+  const request = {
+    order_id: 'order_1', amount: 100, currency: 'USD', mode: 'subscription',
+    recurring: { interval: 'month', interval_count: 1 },
+    customer: { product_customer_id: 'customer_1', email: 'buyer@example.com' },
+  };
+  await pay.payments.checkout(request);
+  assert.deepEqual(JSON.parse(calls[0].options.body), request);
+});
+
 test('verifies the original webhook bytes and timestamp', () => {
   const secret = 'test-webhook-secret';
   const timestamp = Math.floor(Date.now() / 1000);

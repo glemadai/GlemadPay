@@ -12,7 +12,11 @@ pub struct CheckoutRequest {
     pub order_id: String,
     pub amount: i64,
     pub currency: String,
-    pub country: String,
+    #[serde(default, skip_serializing_if="Option::is_none")]
+    pub country: Option<String>,
+    pub mode: String,
+    #[serde(default, skip_serializing_if="Option::is_none")]
+    pub recurring: Option<CheckoutRequestRecurring>,
     pub customer: Customer,
     #[serde(default, skip_serializing_if="Option::is_none")]
     pub callback_url: Option<String>,
@@ -316,6 +320,11 @@ pub struct CheckoutRequestBreakdownItem {
     pub label: String,
     #[serde(rename="amountMinor")]
     pub amount_minor: i64,
+}
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct CheckoutRequestRecurring {
+    pub interval: String,
+    pub interval_count: i64,
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct KycSessionRequestExpectedDetails {

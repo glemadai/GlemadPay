@@ -38,6 +38,7 @@ const checkout = await pay.payments.checkout({
   amount: 250000,
   currency: "NGN",
   country: "NG",
+  mode: "payment",
   customer: {
     product_customer_id: "customer_42",
     email: "ada@example.com",
@@ -50,6 +51,15 @@ const checkout = await pay.payments.checkout({
 ```
 
 Redirect the customer to `checkout.checkout_url`. Confirm payment from a verified webhook or by retrieving the order. Do not use the browser redirect as proof of payment.
+
+For recurring billing, declare the schedule explicitly. Glemad Pay never infers it from a product, order ID, or plan name:
+
+```js
+mode: "subscription",
+recurring: { interval: "month", interval_count: 1 },
+```
+
+Supported intervals are `day`, `week`, `month`, and `year`. A subscription requires `recurring`; a one-time `payment` must not include it.
 
 ## Verify a webhook
 

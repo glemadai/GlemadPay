@@ -12,6 +12,7 @@ async function createCheckout() {
     amount: 250000,
     currency: 'NGN',
     country: 'NG',
+    mode: 'payment',
     customer: {
       product_customer_id: 'customer_42',
       email: 'ada@example.com',
