@@ -45,6 +45,28 @@ impl GlemadPayClient {
         let request = request.query(&[("country",country)]);
         self.api_request(request).await
     }
+    /// Create or connect the Glemad Pay account for an internal Glemad product.
+    pub async fn accounts_create(&self, body: &types::AccountRequest) -> anyhow::Result<types::Account> {
+        let request = self.http.post(format!("{}/v1/accounts", self.base_url));
+        let request = request.json(body);
+        self.api_request(request).await
+    }
+    /// Retrieve a connected Glemad Pay account.
+    pub async fn accounts_retrieve(&self, account_id: &str) -> anyhow::Result<types::Account> {
+        let request = self.http.get(format!("{}/v1/accounts/{}", self.base_url, encode_segment(account_id)?));
+        self.api_request(request).await
+    }
+    /// Credit funds to a connected Glemad Pay account.
+    pub async fn transfers_create(&self, body: &types::TransferRequest) -> anyhow::Result<types::Transfer> {
+        let request = self.http.post(format!("{}/v1/transfers", self.base_url));
+        let request = request.json(body);
+        self.api_request(request).await
+    }
+    /// Retrieve a platform transfer.
+    pub async fn transfers_retrieve(&self, transfer_id: &str) -> anyhow::Result<types::Transfer> {
+        let request = self.http.get(format!("{}/v1/transfers/{}", self.base_url, encode_segment(transfer_id)?));
+        self.api_request(request).await
+    }
     /// Read verification status.
     pub async fn kyc_status(&self, product_customer_id: &str, country: Option<&str>) -> anyhow::Result<types::KycStatus> {
         let request = self.http.get(format!("{}/v1/kyc/status", self.base_url));
